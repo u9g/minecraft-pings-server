@@ -1,7 +1,3 @@
-Bun.serve<number>({
-	fetch: () => new Response("Ok"),
-})
-
 Bun.serve<{ username: string; ip: string }>({
 	websocket: {
 		message(ws, message) {
