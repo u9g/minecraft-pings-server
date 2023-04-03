@@ -7,6 +7,10 @@ Bun.serve<{ username: string; ip: string }>({
 				console.log(`received packet: ${JSON.stringify(packet)}`)
 				if (packet.type === "connected") {
 					ws.data = { ip: packet.ip, username: packet.username }
+
+					if (ws.data.ip.includes('midnightsky.'))
+						ws.data.ip = 'midnightsky'
+
 					ws.subscribe(packet.ip)
 				} else if (packet.type === "disconnected") {
 					ws.unsubscribe(packet.ip)
