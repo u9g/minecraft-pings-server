@@ -3,6 +3,7 @@ import { appendFile } from "fs/promises";
 
 Bun.serve<{ username: string; ip: string }>({
   websocket: {
+    publishToSelf: true,
     message(ws, message) {
       if (typeof message !== "string") return;
       try {
@@ -18,15 +19,12 @@ Bun.serve<{ username: string; ip: string }>({
             JSON.stringify({ ip: packet.ip, username: packet.username }) + "\n"
           );
 
-          console.log("subscribe: " + packet.ip);
-
           ws.subscribe(packet.ip);
         } else if (packet.type === "disconnected") {
-          ws.unsubscribe(packet.ip);
+          ws.unsubscribe(ws.data.ip);
           ws.data.ip = "";
         } else if (packet.type === "ping") {
           if (ws.data.ip === "") return;
-          console.log("sending ping: " + JSON.stringify(ws.data));
           ws.publish(
             ws.data.ip,
             JSON.stringify({
