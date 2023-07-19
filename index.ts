@@ -15,8 +15,10 @@ Bun.serve<{ username: string; ip: string }>({
           ws.data = { ip: packet.ip, username: packet.username };
           appendFile(
             "./log.txt",
-            JSON.stringify({ ip: packet.ip, username: packet.username })
+            JSON.stringify({ ip: packet.ip, username: packet.username }) + "\n"
           );
+
+          console.log("subscribe: " + packet.ip);
 
           ws.subscribe(packet.ip);
         } else if (packet.type === "disconnected") {
@@ -34,6 +36,8 @@ Bun.serve<{ username: string; ip: string }>({
               username: ws.data.username,
             })
           );
+
+          console.log("ping on " + ws.data.ip);
         }
       } catch (e) {
         console.log(e);
